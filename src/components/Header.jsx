@@ -3,7 +3,7 @@ import React from 'react'
 const Header = () => {
   return (
     <header className='border-b border-slate-200 bg-white'>
-        <div className="mx-auto max-w-7xl items-center justify-between px-6 py-5">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
             <div>
                 <h1 className='text-2xl font-bold text-slate-900'>
                     Movie Explorer
