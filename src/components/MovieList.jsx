@@ -7,6 +7,7 @@ const MovieList = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(false)
 
     
     const filterMovies = movies.filter((movie) =>
@@ -21,11 +22,14 @@ const MovieList = () => {
             return;
         }
         try {
+            setIsLoading(true)
+
            const results = await searchMovies(term);
            setMovies(results); 
         } catch (error) {
-            console.error(error);
-            
+            console.error(error);    
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -37,6 +41,11 @@ const MovieList = () => {
         <h2 className='text-2xl font-bold text-slate-900'>
             {searchTerm ? `Results for "${searchTerm}"` : "Explore Movies"}
         </h2>
+        {isLoading && (
+            <p className='mt-6 text-center text-slate-500'>
+                Searching movies...
+            </p>
+        )}
 
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filterMovies.map((movie) => (
