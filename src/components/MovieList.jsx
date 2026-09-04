@@ -1,36 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MovieCard from './MovieCard'
+import SearchBar from './SearchBar';
+import { searchMovies } from '../services/movieApi';
 
 const MovieList = () => {
-    const movies = [
-        {
-            id:1,
-            title: "Inception",
-            year:2010
-        },
-        {
-            id:2,
-            title: "Interstellar",
-            year:2014
-        },
-        {
-            id:3,
-            title:"The Dark Knight",
-            year: 2008
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [movies, setMovies] = useState([]);
+
+    
+    const filterMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const handleSearch = async (term) => {
+        setSearchTerm(term);
+
+        if(!term.trim()){
+            setMovies([]);
+            return;
         }
-    ]
+        try {
+           const results = await searchMovies(term);
+           setMovies(results); 
+        } catch (error) {
+            console.error(error);
+            
+        }
+    }
+
   return (
+    <>
+    <SearchBar onSearch={handleSearch} />
+
     <section className='mx-auto max-w-7xl px-6 py-8'>
         <h2 className='text-2xl font-bold text-slate-900'>
-            Explore Movies
+            {searchTerm ? `Results for "${searchTerm}"` : "Explore Movies"}
         </h2>
 
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {movies.map((movie) => (
+            {filterMovies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie}/>
             ))}
         </div>
     </section>
+    </>
   )
 }
 
