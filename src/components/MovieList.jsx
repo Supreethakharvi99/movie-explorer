@@ -1,77 +1,81 @@
-import React, { useEffect, useState } from 'react'
-import MovieCard from './MovieCard'
-import SearchBar from './SearchBar';
-import { getPopularMovies, searchMovies } from '../services/movieApi';
+import React, { useEffect, useState } from "react";
+import MovieCard from "./MovieCard";
+import SearchBar from "./SearchBar";
+import { getPopularMovies, searchMovies } from "../services/movieApi";
 
 const MovieList = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [searchTerm, setSearchTerm] = useState("");
-    const [movies, setMovies] = useState([]);
-    const [isLoading, setIsLoading] = useState(false)
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        setIsLoading(true);
 
-    useEffect(() => {
-        const loadPopularMovies = async () => {
-            try {
-                setIsLoading(true);
+        const results = await getPopularMovies();
+        setMovies(results);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-                const results = await getPopularMovies();
-                setMovies(results);
-            } catch (error) {
-                console.error(error);      
-            } finally {
-                setIsLoading(false)
-            }
-        };
+    loadPopularMovies();
+  }, []);
 
-        loadPopularMovies();
-    }, [])
+  const filterMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
-    
-    const filterMovies = movies.filter((movie) =>
-    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  const handleSearch = async (term) => {
+    setSearchTerm(term);
 
-    const handleSearch = async (term) => {
-        setSearchTerm(term);
-
-        if(!term.trim()){
-            setMovies([]);
-            return;
-        }
-        try {
-            setIsLoading(true)
-
-           const results = await searchMovies(term);
-           setMovies(results); 
-        } catch (error) {
-            console.error(error);    
-        } finally {
-            setIsLoading(false)
-        }
+    if (!term.trim()) {
+      setMovies([]);
+      return;
     }
+    try {
+      setIsLoading(true);
+
+      const results = await searchMovies(term);
+      setMovies(results);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
-    <SearchBar onSearch={handleSearch} />
+      <SearchBar onSearch={handleSearch} />
 
-    <section className='mx-auto max-w-7xl px-6 py-8'>
-        <h2 className='text-2xl font-bold text-slate-900'>
-            {searchTerm ? `Results for "${searchTerm}"` : "Explore Movies"}
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <h2 className="text-2xl font-bold text-slate-900">
+          {searchTerm ? `Results for "${searchTerm}"` : "Explore Movies"}
         </h2>
-        {isLoading && (
-            <p className='mt-6 text-center text-slate-500'>
-                Searching movies...
+        {!isLoading && filterMovies.length === 0 ? (
+          <div className="mt-10 text-center">
+            <p className="text-lg font-medium text-slate-600">
+              No movies found
             </p>
-        )}
 
-        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <p className="mt-1 text-sm text-slate-400">
+              Try searching for another movie.
+            </p>
+          </div>
+        ) : (
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filterMovies.map((movie) => (
-                <MovieCard key={movie.id} movie={movie}/>
+              <MovieCard key={movie.id} movie={movie} />
             ))}
-        </div>
-    </section>
+          </div>
+        )}
+      </section>
     </>
-  )
-}
+  );
+};
 
-export default MovieList
+export default MovieList;
