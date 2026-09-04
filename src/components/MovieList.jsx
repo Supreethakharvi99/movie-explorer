@@ -1,13 +1,30 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import MovieCard from './MovieCard'
 import SearchBar from './SearchBar';
-import { searchMovies } from '../services/movieApi';
+import { getPopularMovies, searchMovies } from '../services/movieApi';
 
 const MovieList = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(() => {
+        const loadPopularMovies = async () => {
+            try {
+                setIsLoading(true);
+
+                const results = await getPopularMovies();
+                setMovies(results);
+            } catch (error) {
+                console.error(error);      
+            } finally {
+                setIsLoading(false)
+            }
+        };
+
+        loadPopularMovies();
+    }, [])
 
     
     const filterMovies = movies.filter((movie) =>

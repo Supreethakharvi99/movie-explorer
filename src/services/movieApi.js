@@ -22,3 +22,18 @@ export const searchMovies = async (query) => {
 
   return data.results;
 };
+
+export const getPopularMovies = async () => {
+    const response = await fetch(
+        `${BASE_URL}/movie/popular`,
+        options
+    );
+
+    if(!response.ok) {
+        throw new Error("Failed to fetch popular movies")
+    }
+
+    const data = await response.json();
+
+    return data.results;
+}
