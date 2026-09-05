@@ -1,5 +1,7 @@
+import {Routes, Route} from "react-router-dom"
 import Header from "./components/Header"
 import MovieList from "./components/MovieList"
+import MovieDetails from "./pages/MovieDetails"
 
 
 function App() {
@@ -7,7 +9,11 @@ function App() {
   return (
     <>
     <Header/>
-    <MovieList/>
+
+    <Routes>
+      <Route path="/" element={<MovieList/>}/>
+      <Route path="/movie/:id" element={<MovieDetails/>}/>
+    </Routes>
     </>
   )
 }

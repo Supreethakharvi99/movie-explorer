@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function MovieCard({ movie }) {
 
   const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : null;
@@ -5,7 +7,9 @@ function MovieCard({ movie }) {
   const releaseYear = movie.release_date ? movie.release_date.slice(0,4) : "N/A"
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+    <Link
+    to={`/movie/${movie.id}`}
+     className="block overflow-hidden rounded-xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
       
       {posterUrl ? (
         <img
@@ -29,7 +33,7 @@ function MovieCard({ movie }) {
         {releaseYear}
       </p>
       </div>
-    </div>
+    </Link>
   );
 }
 
