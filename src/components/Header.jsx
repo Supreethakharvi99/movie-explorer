@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
   return (
@@ -14,9 +15,11 @@ const Header = () => {
                 </p>
             </div>
 
-            <button className='rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700'>
-                Favorites
-            </button>
+           <Link
+           to="/favorites"
+           className='rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700'>
+            ❤️ Favorites
+           </Link>
         </div>
     </header>
   )
