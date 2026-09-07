@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { getMovieDetails } from '../services/movieApi';
 
 const MovieDetails = () => {
@@ -34,6 +34,11 @@ const MovieDetails = () => {
 
   return (
     <main className="mx-auto max-w-7xl px-6 py-8">
+      <Link
+      to="/"
+      className='mb-6 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-700'>
+        ← Back to Movies
+      </Link>
       <div className="grid gap-8 md:grid-cols-[300px_1fr]">
         <img
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
