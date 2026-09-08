@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function MovieCard({ movie }) {
+function MovieCard({ movie ,onRemoveFav}) {
 
   const [isFavorite, setIsFavorite] = useState(() => {
     const savedFavorites = JSON.parse(
@@ -21,8 +21,13 @@ function MovieCard({ movie }) {
       (favorite) => favorite.id !== movie.id
     );
 
+
     localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
     setIsFavorite(false);
+
+    if(onRemoveFav){
+      onRemoveFav(movie.id)
+    }
   } else {
     const updatedFavorites = [...savedFavorites, movie];
 

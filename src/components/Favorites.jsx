@@ -24,7 +24,14 @@ const Favorites = () => {
         ) : (
             <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {fav.map((movie) => (
-                    <MovieCard key={movie.id} movie={movie} />
+                    <MovieCard 
+                    key={movie.id} 
+                    movie={movie} 
+                    onRemoveFav={(id) =>{
+                        setFav((currentFav) => 
+                        currentFav.filter((fav) => fav.id !== id)
+                    );
+                    }}/>
                 ))}
             </div>
         )}
