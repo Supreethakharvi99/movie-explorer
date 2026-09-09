@@ -8,14 +8,24 @@ const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const loadMovieDetails = async () => {
       try {
         setIsLoading(true);
+        setError("");
 
         const result = await getMovieDetails(id);
         setMovie(result);
+
+        const savedFavorites = JSON.parse(
+          localStorage.getItem("favorites") || "[]"
+        );
+
+        setIsFavorite(
+          savedFavorites.some((favorite) => favorite.id === result.id)
+        );
       } catch (error) {
         console.error(error);
         setError("Unable to load movie details.");
@@ -26,6 +36,26 @@ const MovieDetails = () => {
 
     loadMovieDetails();
   }, [id]);
+
+  const toggleFavorite = () => {
+    const savedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]"
+    );
+
+    if (isFavorite) {
+      const updatedFavorites = savedFavorites.filter(
+        (favorite) => favorite.id !== movie.id
+      );
+
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      setIsFavorite(false);
+    } else {
+      const updatedFavorites = [...savedFavorites, movie];
+
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+      setIsFavorite(true);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -85,15 +115,22 @@ const MovieDetails = () => {
         />
 
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{movie.title}</h1>
+          <h1 className="text-3xl font-bold text-slate-900">
+            {movie.title}
+          </h1>
 
           <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
             <span>📅 {movie.release_date || "N/A"}</span>
 
             <span>⭐ {movie.vote_average.toFixed(1)}</span>
 
-            <span>⏱️ {movie.runtime ? `${movie.runtime} min` : "N/A"}</span>
-            <span>🌐 {movie.original_language?.toUpperCase() || "N/A"}</span>
+            <span>
+              ⏱️ {movie.runtime ? `${movie.runtime} min` : "N/A"}
+            </span>
+
+            <span>
+              🌐 {movie.original_language?.toUpperCase() || "N/A"}
+            </span>
           </div>
 
           <div className="mt-6">
@@ -111,6 +148,14 @@ const MovieDetails = () => {
             <p className="mt-6 leading-7 text-slate-600">
               {movie.overview || "No overview available."}
             </p>
+
+            <button
+              type="button"
+              onClick={toggleFavorite}
+              className="mt-6 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+            >
+              {isFavorite ? "❤️ Remove from Favorites" : "♡ Add to Favorites"}
+            </button>
           </div>
         </div>
       </div>

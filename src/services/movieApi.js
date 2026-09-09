@@ -8,9 +8,9 @@ const options = {
   },
 };
 
-export const searchMovies = async (query) => {
+export const searchMovies = async (query, page = 1) => {
   const response = await fetch(
-    `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}`,
+    `${BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`,
     options
   );
 
