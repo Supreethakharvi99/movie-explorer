@@ -7,6 +7,7 @@ const MovieDetails = () => {
 
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const loadMovieDetails = async () => {
@@ -17,6 +18,7 @@ const MovieDetails = () => {
         setMovie(result);
       } catch (error) {
         console.error(error);
+        setError("Unable to load movie details.");
       } finally {
         setIsLoading(false);
       }
@@ -29,6 +31,21 @@ const MovieDetails = () => {
     return (
       <div className="mx-auto max-w-7xl px-6 py-10 text-center text-slate-500">
         Loading movie details...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-10 text-center">
+        <p className="text-red-500">{error}</p>
+
+        <Link
+          to="/"
+          className="mt-4 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-700"
+        >
+          ← Back to Movies
+        </Link>
       </div>
     );
   }
@@ -68,18 +85,15 @@ const MovieDetails = () => {
         />
 
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            {movie.title}
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-900">{movie.title}</h1>
 
           <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-slate-500">
             <span>📅 {movie.release_date || "N/A"}</span>
 
             <span>⭐ {movie.vote_average.toFixed(1)}</span>
 
-            <span>
-              ⏱️ {movie.runtime ? `${movie.runtime} min` : "N/A"}
-            </span>
+            <span>⏱️ {movie.runtime ? `${movie.runtime} min` : "N/A"}</span>
+            <span>🌐 {movie.original_language?.toUpperCase() || "N/A"}</span>
           </div>
 
           <div className="mt-6">
